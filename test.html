@@ -1,0 +1,84 @@
+<!doctype html>
+<html lang="ru">
+<head>
+<meta charset="utf-8">
+<meta name="viewport" content="width=device-width, initial-scale=1">
+<meta name="theme-color" content="#fbf4fb">
+<title>Мой главный запрос</title>
+<style>
+:root{--bg:#fbf4fb;--card:#fffaff;--ink:#342438;--muted:#78677d;--accent:#8c3f78;--accent2:#bd8cb6;--line:#ead8e9;--soft:#f3e4f2;--pink:#b84f87;--lilac:#a995d5}
+*{box-sizing:border-box}
+body{margin:0;background:radial-gradient(circle at 90% 0%,#eadcf8 0,transparent 34%),radial-gradient(circle at 0% 70%,#f7dce9 0,transparent 30%),var(--bg);font-family:system-ui,-apple-system,BlinkMacSystemFont,"Segoe UI",sans-serif;color:var(--ink);min-height:100vh;padding:24px 14px 40px}
+.wrap{max-width:720px;margin:0 auto}.brand{text-align:center;font-size:12px;letter-spacing:.17em;text-transform:uppercase;color:var(--muted);margin:8px 0 18px}
+.card{background:rgba(255,250,255,.94);border:1px solid var(--line);border-radius:25px;padding:clamp(22px,5vw,42px);box-shadow:0 18px 55px #542b5d12}
+.kicker{font-size:12px;text-transform:uppercase;letter-spacing:.13em;color:var(--accent);font-weight:750;margin:0 0 12px}
+h1{font-size:clamp(30px,6vw,43px);line-height:1.08;letter-spacing:-.035em;margin:0 0 14px}h2{font-size:clamp(23px,4vw,30px);line-height:1.18;letter-spacing:-.02em;margin:0 0 12px}
+p{line-height:1.65;margin:0 0 15px}.intro{font-size:16px;color:#5c4a61;max-width:570px}.note{font-size:13px;color:var(--muted)}
+.progress{height:4px;background:var(--soft);border-radius:8px;overflow:hidden;margin:0 0 26px}.progress span{display:block;height:100%;background:linear-gradient(90deg,var(--lilac),var(--pink));transition:width .2s}
+.options{display:grid;gap:10px;margin-top:22px}.option{width:100%;border:1px solid var(--line);background:#fffaff;border-radius:15px;padding:16px 17px;text-align:left;font:inherit;color:var(--ink);cursor:pointer;display:flex;gap:12px;align-items:flex-start;transition:border-color .15s,background .15s,transform .15s}.option:before{content:"";width:10px;height:10px;border:1.5px solid var(--pink);border-radius:50%;flex:0 0 10px;margin-top:6px}.option:hover,.option:focus-visible{border-color:var(--accent);background:#fbecf8;outline:none;transform:translateY(-1px)}.option:focus-visible{box-shadow:0 0 0 3px #8c3f7822}
+.actions{display:flex;gap:10px;align-items:center;margin-top:24px}button.secondary{border:0;background:transparent;color:var(--muted);font:inherit;cursor:pointer;padding:10px 0}
+.result-label{display:inline-block;background:var(--soft);color:var(--accent);border-radius:99px;padding:7px 12px;font-size:12px;font-weight:750;letter-spacing:.04em;margin-bottom:17px}
+.result-request{font-size:22px;font-weight:750;line-height:1.3;margin:8px 0 18px}.talisman{font-weight:750;color:var(--accent)}
+.benefits{background:linear-gradient(135deg,#f7e9f7,#fcebf2);border:1px solid var(--line);padding:18px;border-radius:16px;margin:20px 0}
+.price{display:flex;align-items:baseline;gap:12px;flex-wrap:wrap;margin:20px 0}.old-price{font-size:20px;color:#8c7c90;text-decoration:line-through;text-decoration-thickness:2px}.new-price{font-size:30px;font-weight:850;color:var(--accent)}.price-note{width:100%;font-size:13px;color:var(--muted)}
+.cta{display:block;text-align:center;background:linear-gradient(100deg,#8750a5,#a83f7c);color:white;text-decoration:none;font-weight:750;padding:16px 20px;border-radius:14px;margin:18px 0 12px;box-shadow:0 7px 18px #8c3f7825}.cta:hover{filter:brightness(.96)}
+footer{text-align:center;color:var(--muted);font-size:12px;margin:18px auto 0;max-width:560px}
+@media(max-width:480px){body{padding:12px 10px 28px}.card{border-radius:20px}.option{padding:14px}.result-request{font-size:20px}}
+</style></head>
+<body><div class="wrap"><div class="brand">Мой главный запрос</div><main class="card" id="app" aria-live="polite"></main><footer>Талисман — вспомогательный инструмент. Результаты и сроки индивидуальны.</footer></div>
+<script>
+const app=document.getElementById('app');
+const data={
+career:{label:'Карьерный талисман',requests:[['business','Успех в бизнесе.'],['growth','Карьерный рост.'],['authority','Повышение авторитета.'],['position','Получение высокого поста.'],['confidence','Повышение уверенности в себе.'],['income_work','Выход на высокий доход.'],['project','Открытие нового прибыльного проекта.'],['big_goal','Реализация большой цели.']]},
+love:{label:'Любовный талисман',requests:[['love','Обретение любви.'],['family','Создание семьи, брак.'],['protection','Защита от негатива.'],['harmony','Гармония с собой.'],['friends','Обретение новых друзей или укрепление связи со старыми.']]},
+money:{label:'Талисман на быстрые деньги',requests:[['luck','Удача в делах.'],['fast_money','Лёгкие и быстрые деньги.'],['channel','Увеличение денежного канала.'],['sale','Ускорение продажи.'],['travel','Путешествия.'],['move','Переезд.']]}
+};
+const requestMap={};
+for(const [cat,g] of Object.entries(data))for(const [id,text] of g.requests)requestMap[id]={text,talisman:g.label};
+requestMap.purchase={text:'Купить квартиру, машину или совершить другую крупную покупку.',talisman:data.love.label};
+function home(){app.innerHTML=`
+<p class="kicker">Небольшой тест для тебя</p>
+<h1>Мой главный запрос ✨</h1>
+<p class="intro">Ответь на пару вопросов и узнай, какой талисман подходит под твоё желание.</p>
+<div class="benefits"><p style="font-weight:750;margin-bottom:8px">Что ты узнаешь?</p><p style="margin:0">Выберешь свой главный запрос и получишь рекомендацию талисмана, рассчитанного под конкретную сферу жизни.</p></div>
+<button class="cta" id="start-test" type="button">Начать тест</button>`;
+document.getElementById('start-test').onclick=start}
+function start(){app.innerHTML=`
+<p class="kicker">Начнём с главного</p>
+<h1>Чего тебе сейчас больше всего хочется изменить в своей жизни? ✨</h1>
+<p class="intro">Выбери сферу, которая сейчас откликается сильнее всего.</p>
+<div class="progress"><span style="width:25%"></span></div>
+<div class="options">
+<button class="option" data-go="career"><span><strong>Работа, карьера, уверенность в себе</strong><br>Хочу реализовать свои способности, добиться большего, развиваться и чувствовать себя увереннее.</span></button>
+<button class="option" data-go="love"><span><strong>Любовь, отношения, гармония</strong><br>Хочу любви, гармонии с собой или близкими людьми, защиты от негатива.</span></button>
+<button class="option" data-go="money"><span><strong>Деньги и материальные цели</strong><br>Хочу увеличить доход, привлечь деньги, улучшить финансовую ситуацию или достичь материальной цели.</span></button>
+<button class="option" data-go="opportunities"><span><strong>Удача и новые возможности</strong><br>Хочу, чтобы важные дела продвигались быстрее, появилась удача, возможность путешествовать или переехать.</span></button>
+</div>`;
+app.querySelectorAll('[data-go]').forEach(b=>b.onclick=()=>category(b.dataset.go))}
+function category(cat){
+ if(cat==='opportunities'){renderOptions('Что сейчас для тебя важнее всего?',[['luck','Удача в делах.'],['sale','Ускорение продажи.'],['travel','Путешествия.'],['move','Переезд.']]);return}
+ const g=data[cat];
+ const requests = cat==='money'
+   ? [...g.requests, ['purchase','Купить квартиру, машину или совершить другую крупную покупку.']]
+   : g.requests;
+ const q=cat==='career'?'Что именно ты хочешь изменить в работе или карьере?':cat==='love'?'Какое желание сейчас для тебя самое важное?':'Какой результат тебе сейчас нужнее всего?';
+ renderOptions(q,requests)
+}
+function renderOptions(question,opts){
+ app.innerHTML='<p class="kicker">Твой главный запрос</p><h2>'+question+'</h2><p class="intro">Выбери одно конкретное желание — результат будет связан именно с ним.</p><div class="progress"><span style="width:70%"></span></div><div class="options">'+opts.map(([id,t])=>'<button class="option" data-result="'+id+'">'+t+'</button>').join('')+'</div><div class="actions"><button class="secondary" id="back">← Назад</button></div>';
+ app.querySelectorAll('[data-result]').forEach(b=>b.onclick=()=>result(b.dataset.result));document.getElementById('back').onclick=start
+}
+function result(id){
+ const r=requestMap[id];
+ const message='Здравствуйте! Хочу заказать индивидуальный талисман. Мой запрос: «'+r.text+'» Рекомендованный талисман: '+r.talisman+'. Подскажите, пожалуйста, как оформить заказ со скидкой?';
+ const encoded=encodeURIComponent(message);
+ const directUrl='https://wa.me/79898277767?text='+encoded;
+ app.innerHTML='<span class="result-label">ТВОЙ РЕЗУЛЬТАТ</span><h2>Твой главный запрос</h2><div class="result-request">'+r.text+'</div><p>Под этот запрос подходит: <span class="talisman">'+r.talisman+'</span></p><div class="benefits"><p style="font-weight:750;margin-bottom:8px">Как работает талисман?</p><p style="margin:0">Твой талисман — это индивидуальный расчёт по дате рождения, созданный под одно конкретное желание.<br><br>Он предназначен для того, чтобы помочь направить изменения в нужную сторону, привлечь новые возможности и приблизить желаемое.<br><br>Талисман учитывает именно твои данные и твой запрос, поэтому для каждого человека он индивидуален.<br><br>Талисман — это поддержка на пути к желаемому. А твои решения и действия помогают воплощать задуманное в жизнь.</p></div><p>Ты получишь PDF-файл с рассчитанным талисманом, аудиосообщение по активации талисмана и с пояснениями важных моментов. В течение двух недель после получения талисмана я буду на связи и отвечу на возникшие вопросы.</p><div class="price"><span class="old-price">2 200 ₽</span><span class="new-price">1 980 ₽</span><span class="price-note">Скидка 10% при заказе по 28 октября включительно.</span></div><a class="cta" id="order-link" href="'+directUrl+'">Заказать мой индивидуальный талисман</a><div class="actions"><button class="secondary" id="restart">Пройти тест заново</button></div>';
+ document.getElementById('restart').onclick=start;
+ document.getElementById('order-link').addEventListener('click', function(event){
+   event.preventDefault();
+   window.location.href = directUrl;
+ });
+}
+home();
+</script></body></html>
